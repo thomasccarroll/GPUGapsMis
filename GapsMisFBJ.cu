@@ -518,7 +518,7 @@ int GapsMisFBJ::runGPU_Simple_Align_Discard()
 			gpuErrchk(cudaMalloc((void**)&d_B, batchSize*_deviceMatrixSize * sizeof(float)));
 			gpuErrchk(cudaMalloc((void**)&d_H, batchSize*_deviceMatrixSize * sizeof(int)));
 
-			int blockSize = 32* (int)ceil((float)_widthAlign/32.0f);
+			int blockSize = max(256,32* (int)ceil((float)_widthAlign/32.0f));
 			size_t sharedSize = _pAlign * sizeof(int) //Pattern
 								+ 2* (this->_widthAlign) * sizeof(int) //maxILoc and Max J Loc
 								+ 2* (_widthAlign) * sizeof(float) //MaxIVal and Max J Val
@@ -613,7 +613,7 @@ int GapsMisFBJ::runGPU_Single_Backtrack()
 			gpuErrchk(cudaMalloc((void**)&d_H, batchSize*_deviceMatrixSize * sizeof(int)));
 			gpuErrchk(cudaMalloc((void**)&d_Bt, batchSize * 3 * _gaps * sizeof(int)));
 
-			int blockSize = 32* (int)ceil((float)_widthAlign/32.0f);
+			int blockSize = max(256,32* (int)ceil((float)_widthAlign/32.0f));
 			size_t sharedSize = (_pAlign * sizeof(int)) //Pattern
 								+ (3* (this->_widthAlign) * sizeof(int)) //maxILoc and Max J Loc and hRow
 								+ (2* (_widthAlign) * sizeof(float)) //MaxIVal and Max J Val
@@ -707,7 +707,7 @@ int GapsMisFBJ::runGPU_Single_Sendback()
 			gpuErrchk(cudaMalloc((void**)&d_B, batchSize*_deviceMatrixSize * sizeof(float)));
 			gpuErrchk(cudaHostAlloc((void**)&h_H, batchSize*_deviceMatrixSize * sizeof(int), cudaHostAllocMapped));
 			gpuErrchk(cudaHostGetDevicePointer(&d_H, h_H, 0));
-			int blockSize = 32* (int)ceil((float)_widthAlign/32.0f);
+			int blockSize = max(256, 32* (int)ceil((float)_widthAlign/32.0f));
 			size_t sharedSize = _pAlign * sizeof(int) //Pattern
 								+ 3* (this->_widthAlign) * sizeof(int) //maxILoc and Max J Loc and hRow
 								+ 2* (_widthAlign) * sizeof(float) //MaxIVal and Max J Val
@@ -795,7 +795,7 @@ int GapsMisFBJ::runGPU_Single_Sendback()
 	 		for(int batchNo = 0; batchNo < numBatchesNeeded; batchNo++)
 	 		{
 	 			gpu_start = Clock::now();
-	 			int blockSize = 32* (int)ceil((float)_widthAlign/32.0f);
+	 			int blockSize = max(256,32* (int)ceil((float)_widthAlign/32.0f));
 	 			size_t sharedSize = _pAlign * sizeof(int) //Pattern
 	 								+ 2* (this->_widthAlign) * sizeof(int) //maxILoc and Max J Loc
 	 								+ 2* (_widthAlign) * sizeof(float) //MaxIVal and Max J Val
@@ -889,7 +889,7 @@ int GapsMisFBJ::runGPU_Single_Sendback()
 		{
 
 			gpu_start = Clock::now();
-			int blockSize = 32* (int)ceil((float)_widthAlign/32.0f);
+			int blockSize = max(256,32* (int)ceil((float)_widthAlign/32.0f));
 			size_t sharedSize = (_pAlign * sizeof(int)) //Pattern
 										+ (3* (this->_widthAlign) * sizeof(int)) //maxILoc and Max J Loc and hRow
 										+ (2* (_widthAlign) * sizeof(float)) //MaxIVal and Max J Val
@@ -983,7 +983,7 @@ int GapsMisFBJ::runGPU_Single_Sendback()
 			for(int batchNo = 0; batchNo < numBatchesNeeded; batchNo++)
 			{
 				gpu_start = Clock::now();
-				int blockSize = 32* (int)ceil((float)_widthAlign/32.0f);
+				int blockSize = max(256,32* (int)ceil((float)_widthAlign/32.0f));
 				size_t sharedSize = (_pAlign * sizeof(int)) //Pattern
 											+ (3* (this->_widthAlign) * sizeof(int)) //maxILoc and Max J Loc and hRow
 											+ (2* (_widthAlign) * sizeof(float)) //MaxIVal and Max J Val
